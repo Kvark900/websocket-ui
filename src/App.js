@@ -2,6 +2,8 @@ import './App.css';
 import {useEffect, useMemo, useRef, useState} from "react";
 import SockJS from 'sockjs-client'
 import Stomp from 'stompjs'
+import Button from '@material-ui/core/Button';
+import {TextField} from "@material-ui/core";
 
 const BASE_URL = "http://localhost:8080";
 
@@ -12,12 +14,14 @@ function App()
     const [msg, setMsg] = useState("");
 
     useEffect(() => {
-        if (!stompClient.current) {
+        if (!stompClient.current)
+        {
             console.log("STOMP client resolved to null, connecting...")
             stompClient.current = initializeStompClient()
             connect()
         }
-        else if (!stompClient.current.connected) {
+        else if (!stompClient.current.connected)
+        {
             console.log("Connection lost, connecting again...")
             connect()
         }
@@ -55,21 +59,30 @@ function App()
         });
         console.log("List for rendering is: " + msgsList)
         return msgsList;
-    },[msgs]);
+    }, [msgs]);
 
     return (
         <div className="App">
-            <header className="App-header">
-                <div>
-                    <input value={msg}
-                           onChange={e => setMsg(e.target.value)}/>
-                    <button onClick={event => sendMessage()}
-                            value="send"/>
+            <div id={"container"}>
+                <div id={"sendMessagePanel"}>
+                    <TextField value={msg}
+                               label="Message"
+                               variant="filled"
+                               color="primary"
+                               onChange={e => setMsg(e.target.value)}
+                    />
+                    <Button id={"msgBtn"}
+                            onClick={event => sendMessage()}
+                            variant="contained"
+                            size="small"
+                            color="primary">
+                        Send message
+                    </Button>
                 </div>
-                <div id="msgs">
+                    <div id="msgsListDiv">
                     {list}
                 </div>
-            </header>
+            </div>
         </div>
     );
 }
